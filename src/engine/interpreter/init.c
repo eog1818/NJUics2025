@@ -18,10 +18,12 @@
 void sdb_mainloop();
 
 void engine_start() {
+  printf("step engine start\n");
 #ifdef CONFIG_TARGET_AM
   cpu_exec(-1);
 #else
   /* Receive commands from user. */
+  printf("step is going to sdb mainloop\n");
   sdb_mainloop();
 #endif
 }

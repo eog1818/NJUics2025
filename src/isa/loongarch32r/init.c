@@ -27,6 +27,7 @@ static const uint32_t img [] = {
 };
 
 static void restart() {
+  printf("step restart\n");
   /* Set the initial program counter. */
   cpu.pc = RESET_VECTOR;
 
@@ -35,6 +36,7 @@ static void restart() {
 }
 
 void init_isa() {
+  printf("step in loongarch32 init isa\n");
   /* Load built-in image. */
   memcpy(guest_to_host(RESET_VECTOR), img, sizeof(img));
 

@@ -34,6 +34,8 @@ enum {
 #define immS() do { *imm = (SEXT(BITS(i, 31, 25), 7) << 5) | BITS(i, 11, 7); } while(0)
 
 static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2, word_t *imm, int type) {
+  printf("step in decode operand\n");
+
   uint32_t i = s->isa.inst;
   int rs1 = BITS(i, 19, 15);
   int rs2 = BITS(i, 24, 20);
@@ -48,6 +50,7 @@ static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2, word_
 }
 
 static int decode_exec(Decode *s) {
+  printf("step in decode exec\n");
   s->dnpc = s->snpc;
 
 #define INSTPAT_INST(s) ((s)->isa.inst)
@@ -73,6 +76,10 @@ static int decode_exec(Decode *s) {
 }
 
 int isa_exec_once(Decode *s) {
+  printf("step in riscv64 isa exec once\n");
+  printf("step going to inst ifetch\n");
   s->isa.inst = inst_fetch(&s->snpc, 4);
+  
+  printf("step going to decode exec\n");
   return decode_exec(s);
 }

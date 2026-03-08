@@ -25,15 +25,19 @@ void init_sdb();
 void init_disasm();
 
 static void welcome() {
+  
+  printf("step welcome");
+  
   Log("Trace: %s", MUXDEF(CONFIG_TRACE, ANSI_FMT("ON", ANSI_FG_GREEN), ANSI_FMT("OFF", ANSI_FG_RED)));
   IFDEF(CONFIG_TRACE, Log("If trace is enabled, a log file will be generated "
         "to record the trace. This may lead to a large log file. "
         "If it is not necessary, you can disable it in menuconfig"));
   Log("Build time: %s, %s", __TIME__, __DATE__);
   printf("Welcome to %s-NEMU!\n", ANSI_FMT(str(__GUEST_ISA__), ANSI_FG_YELLOW ANSI_BG_RED));
+
   printf("For help, type \"help\"\n");
   Log("Exercise: Please remove me in the source code and compile NEMU again.");
-  assert(0);
+  //assert(0);
 }
 
 #ifndef CONFIG_TARGET_AM
@@ -47,6 +51,7 @@ static char *img_file = NULL;
 static int difftest_port = 1234;
 
 static long load_img() {
+  printf("step load_img\n");
   if (img_file == NULL) {
     Log("No image is given. Use the default build-in image.");
     return 4096; // built-in image size
@@ -69,6 +74,7 @@ static long load_img() {
 }
 
 static int parse_args(int argc, char *argv[]) {
+  printf("step parse_args\n");
   const struct option table[] = {
     {"batch"    , no_argument      , NULL, 'b'},
     {"log"      , required_argument, NULL, 'l'},
@@ -99,6 +105,8 @@ static int parse_args(int argc, char *argv[]) {
 }
 
 void init_monitor(int argc, char *argv[]) {
+
+  printf("step init_monitor\n");
   /* Perform some global initialization. */
 
   /* Parse arguments. */
@@ -114,23 +122,30 @@ void init_monitor(int argc, char *argv[]) {
   init_mem();
 
   /* Initialize devices. */
+  printf("step is going to init device\n");
   IFDEF(CONFIG_DEVICE, init_device());
 
   /* Perform ISA dependent initialization. */
+  printf("step is going to init isa\n");
   init_isa();
 
   /* Load the image to memory. This will overwrite the built-in image. */
+  printf("step is going to load img\n");
   long img_size = load_img();
 
   /* Initialize differential testing. */
+  printf("step is going to init difftest\n");
   init_difftest(diff_so_file, img_size, difftest_port);
 
   /* Initialize the simple debugger. */
+  printf("step is going to init sdb\n");
   init_sdb();
 
+  printf("step is going to init disasm\n");
   IFDEF(CONFIG_ITRACE, init_disasm());
 
   /* Display welcome message. */
+  printf("step is going to welcome\n");
   welcome();
 }
 #else // CONFIG_TARGET_AM

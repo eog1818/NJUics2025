@@ -32,6 +32,7 @@ static void (*cs_free_dl)(cs_insn *insn, size_t count);
 static csh handle;
 
 void init_disasm() {
+  printf("step init disasm\n");
   void *dl_handle;
   dl_handle = dlopen("tools/capstone/repo/libcapstone." CS_LIB_SUFFIX, RTLD_LAZY);
   assert(dl_handle);

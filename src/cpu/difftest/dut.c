@@ -60,6 +60,7 @@ void difftest_skip_dut(int nr_ref, int nr_dut) {
 }
 
 void init_difftest(char *ref_so_file, long img_size, int port) {
+  printf("step is init difftest\n");
   assert(ref_so_file != NULL);
 
   void *handle;
@@ -128,5 +129,7 @@ void difftest_step(vaddr_t pc, vaddr_t npc) {
   checkregs(&ref_r, pc);
 }
 #else
-void init_difftest(char *ref_so_file, long img_size, int port) { }
+void init_difftest(char *ref_so_file, long img_size, int port) {
+  printf("step is init difftest - empty\n");
+ }
 #endif

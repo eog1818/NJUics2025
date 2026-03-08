@@ -39,11 +39,13 @@ static uint64_t get_time_internal() {
 }
 
 uint64_t get_time() {
+  printf("step get time\n");
   if (boot_time == 0) boot_time = get_time_internal();
   uint64_t now = get_time_internal();
   return now - boot_time;
 }
 
 void init_rand() {
+  printf("step init rand\n");
   srand(get_time_internal());
 }

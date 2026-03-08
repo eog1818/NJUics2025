@@ -49,6 +49,7 @@ static regex_t re[NR_REGEX] = {};
  * Therefore we compile them only once before any usage.
  */
 void init_regex() {
+  printf("step init regex\n");
   int i;
   char error_msg[128];
   int ret;
@@ -63,6 +64,7 @@ void init_regex() {
 }
 
 typedef struct token {
+
   int type;
   char str[32];
 } Token;
@@ -71,6 +73,7 @@ static Token tokens[32] __attribute__((used)) = {};
 static int nr_token __attribute__((used))  = 0;
 
 static bool make_token(char *e) {
+  printf("step is make token\n");
   int position = 0;
   int i;
   regmatch_t pmatch;
@@ -113,12 +116,14 @@ static bool make_token(char *e) {
 
 
 word_t expr(char *e, bool *success) {
+  printf("step is expr\n");
   if (!make_token(e)) {
     *success = false;
     return 0;
   }
 
   /* TODO: Insert codes to evaluate the expression. */
+  printf("step is going to TODO\n");
   TODO();
 
   return 0;

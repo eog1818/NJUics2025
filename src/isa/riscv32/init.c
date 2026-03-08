@@ -36,6 +36,7 @@ static void restart() {
 
 void init_isa() {
   /* Load built-in image. */
+  printf("step in riscv64 init isa\n");
   memcpy(guest_to_host(RESET_VECTOR), img, sizeof(img));
 
   /* Initialize this virtual computer system. */

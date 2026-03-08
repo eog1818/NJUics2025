@@ -88,7 +88,7 @@ __EXPORT void difftest_init(int port) {
     printf("Connect to QEMU with %s successfully\n", buf);
 
     atexit(gdb_exit);
-
+    printf("step in going to init isa from difftest init\n");
     init_isa();
   }
 }

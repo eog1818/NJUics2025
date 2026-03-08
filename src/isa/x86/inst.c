@@ -184,6 +184,7 @@ void _2byte_esc(Decode *s, bool is_operand_size_16) {
 }
 
 int isa_exec_once(Decode *s) {
+  printf("step in x86 isa exec once\n");
   bool is_operand_size_16 = false;
   uint8_t opcode = 0;
 

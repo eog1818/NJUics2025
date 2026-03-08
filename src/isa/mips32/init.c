@@ -34,6 +34,7 @@ static void restart() {
 }
 
 void init_isa() {
+  printf("step in mips32 init isa\n");
   /* Load built-in image. */
   memcpy(guest_to_host(RESET_VECTOR), img, sizeof(img));
 

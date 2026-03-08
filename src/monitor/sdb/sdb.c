@@ -26,6 +26,7 @@ void init_wp_pool();
 
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 static char* rl_gets() {
+  printf("step rl gets\n");
   static char *line_read = NULL;
 
   if (line_read) {
@@ -45,11 +46,13 @@ static char* rl_gets() {
 static int cmd_c(char *args) {
   cpu_exec(-1);
   return 0;
+  //return -1;
 }
 
 
 static int cmd_q(char *args) {
   return -1;
+  //return 0;
 }
 
 static int cmd_help(char *args);
@@ -65,14 +68,22 @@ static struct {
   { "help", "Display information about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
-  { "Si [N]", "Execute N step and stop, default N = 1 ", cmd_Si },
+  { "si [N]", "Execute N step and stop, default N = 1 ", cmd_Si }
   /* TODO: Add more commands */
 
 };
 
 #define NR_CMD ARRLEN(cmd_table)
 
+static int cmd_Si(char *args){
+    //const char delim[]=" ";
+    //char *input = readline();
+
+  return 0;
+}
+
 static int cmd_help(char *args) {
+  printf("step cmd help\n");
   /* extract the first argument */
   char *arg = strtok(NULL, " ");
   int i;
@@ -80,12 +91,15 @@ static int cmd_help(char *args) {
   if (arg == NULL) {
     /* no argument given */
     for (i = 0; i < NR_CMD; i ++) {
+    //for (i = 0; i < 2; i ++) {
+      printf("inside arg==NULL: %d ", i);
       printf("%s - %s\n", cmd_table[i].name, cmd_table[i].description);
     }
   }
   else {
     for (i = 0; i < NR_CMD; i ++) {
       if (strcmp(arg, cmd_table[i].name) == 0) {
+        printf("inside arg!=NULL: %d ", i);
         printf("%s - %s\n", cmd_table[i].name, cmd_table[i].description);
         return 0;
       }
@@ -100,11 +114,12 @@ void sdb_set_batch_mode() {
 }
 
 void sdb_mainloop() {
+  printf("step sdb mainloop\n");
   if (is_batch_mode) {
     cmd_c(NULL);
     return;
   }
-
+   printf("step is going to rl_gets\n");
   for (char *str; (str = rl_gets()) != NULL; ) {
     char *str_end = str + strlen(str);
 
@@ -119,7 +134,8 @@ void sdb_mainloop() {
     if (args >= str_end) {
       args = NULL;
     }
-
+  printf("cmd: %s \n", cmd);
+  printf("args: %s \n", args);
 #ifdef CONFIG_DEVICE
     extern void sdl_clear_event_queue();
     sdl_clear_event_queue();
@@ -127,8 +143,13 @@ void sdb_mainloop() {
 
     int i;
     for (i = 0; i < NR_CMD; i ++) {
+      printf("inside mainloop: %d \n", i);
       if (strcmp(cmd, cmd_table[i].name) == 0) {
-        if (cmd_table[i].handler(args) < 0) { return; }
+        if (cmd_table[i].handler(args) < 0) { 
+          return; 
+          //break;
+        }
+        //return;
         break;
       }
     }
@@ -138,9 +159,12 @@ void sdb_mainloop() {
 }
 
 void init_sdb() {
+  printf("step init sdb\n");
   /* Compile the regular expressions. */
+  printf("step is going to init regex\n");
   init_regex();
 
   /* Initialize the watchpoint pool. */
+  printf("step is going to wp pool\n");
   init_wp_pool();
 }

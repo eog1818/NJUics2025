@@ -17,13 +17,19 @@
 #include <memory/paddr.h>
 
 word_t vaddr_ifetch(vaddr_t addr, int len) {
+  printf("step in vaddr ifetch\n");
+  printf("step going to paddr read\n");
   return paddr_read(addr, len);
 }
 
 word_t vaddr_read(vaddr_t addr, int len) {
+  printf("step in vaddr read\n");
+  printf("step going to paddr read\n");
   return paddr_read(addr, len);
 }
 
 void vaddr_write(vaddr_t addr, int len, word_t data) {
+  printf("step in vaddr write\n");
+  printf("step going to paddr write\n");
   paddr_write(addr, len, data);
 }

@@ -35,6 +35,7 @@ static void restart() {
 }
 
 void init_isa() {
+  printf("step in x86 init isa");
   /* Test the implementation of the `CPU_state' structure. */
   void reg_test();
 #ifndef CONFIG_DETERMINISTIC
