@@ -18,6 +18,8 @@
 #include <memory/vaddr.h>
 
 static inline uint32_t inst_fetch(vaddr_t *pc, int len) {
+  printf("step in inst fetch\n");
+  printf("step going to vaddr ifetch\n");
   uint32_t inst = vaddr_ifetch(*pc, len);
   (*pc) += len;
   return inst;
