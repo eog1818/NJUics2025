@@ -15,6 +15,10 @@
 
 #include <isa.h>
 #include "local-include/reg.h"
+#include <cpu/cpu.h>
+#include <cpu/decode.h>
+#include <cpu/difftest.h>
+#include <inttypes.h>
 
 const char *regs[] = {
   "$0", "ra", "sp", "gp", "tp", "t0", "t1", "t2",
@@ -24,8 +28,36 @@ const char *regs[] = {
 };
 
 void isa_reg_display() {
+  //need to fill here
+  printf("step riscv64 isa_reg_display\n");
+  int i;
+  for (i=0; i< ARRLEN(regs); i++){
+    printf("|%-*s|",10, regs[i]);    
+    //printf("0x%x\n",%regs[i]);    
+    
+    printf("|0x%-10x|", cpu.gpr[i]);
+    //printf("%" PRIu32 "\n", cpu.gpr[i]);
+    printf("|%-16u|\n", cpu.gpr[i]);
+
+  }
+    printf("|%-*s|",10, "pc");    
+    printf("|0x%-10x|", cpu.pc);
+    printf("|%-16u|\n", cpu.pc);
+  
+
 }
 
 word_t isa_reg_str2val(const char *s, bool *success) {
   return 0;
 }
+
+//CPU_state
+//typedef struct {
+//  word_t gpr[MUXDEF(CONFIG_RVE, 16, 32)];
+//  vaddr_t pc;
+//} MUXDEF(CONFIG_RV64, riscv64_CPU_state, riscv32_CPU_state);
+
+// reg
+//extern CPU_state cpu;
+//void isa_reg_display();
+//word_t isa_reg_str2val(const char *name, bool *success);

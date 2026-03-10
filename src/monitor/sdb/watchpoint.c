@@ -22,7 +22,7 @@ typedef struct watchpoint {
   struct watchpoint *next;
 
   /* TODO: Add more members if necessary */
-
+  char *WP_content[];
 } WP;
 
 static WP wp_pool[NR_WP] = {};
@@ -41,4 +41,7 @@ void init_wp_pool() {
 }
 
 /* TODO: Implement the functionality of watchpoint */
-
+void isa_watchpoint_display(){
+  printf("step in isa_watchpoint_display\n");
+  
+}

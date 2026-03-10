@@ -82,13 +82,31 @@ void cpu_exec(uint8_t n) {
 }
 
 int main(){
-	char *line_read;
-	char *str; 
-	char *str2;
+	const char *regs[] = {
+  "$0", "ra", "sp", "gp", "tp", "t0", "t1", "t2",
+  "s0", "s1", "a0", "a1", "a2", "a3", "a4", "a5",
+  "a6", "a7", "s2", "s3", "s4", "s5", "s6", "s7",
+  "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6"
+};
+	printf("length  is %d\n", ARRLEN(regs));
+	int i;
+  	for (i=0; i< ARRLEN(regs); i++){
+    	printf("|%-*s|\n",10, regs[i]);    
+
+  	}
+//	char *str="55 57";
+//	int i, num, j;
+//	num = sscanf(str, "%d %d", &i, &j);
+//	printf("i is %d\n", i);
+//	printf("j is %d\n", j);
+//	printf("num is %d\n", num);
+	//char *line_read;
+	//char *str; 
+	//char *str2;
 	//line_read=readline("Enter: ");
-	double x;
-	printf("step cpu_exec\n");
-	cpu_exec(-1);
+	//double x;
+	//printf("step cpu_exec\n");
+	//cpu_exec(-1);
 
 	//scanf("%lf",&x);
 
@@ -138,28 +156,21 @@ int main(){
 
 	//double a = calc();
   //printf("Here is the result %f.\n", a);
-/*
-	char *input;
+
+	/*char *input;
 	char *token;
 	const char delim[]=" ";
 
 
+	
 	while (1)	{
 		input =	readline("Enter test: ");
 
 		if(input == NULL){
 			printf("exit.\n");
-
-
-		
-
 		}
-
 		if(strlen(input) > 0 ){
 			add_history(input);
-
-
-
 		}
 
 		//printf("Your entered: %s.\n", input);
@@ -167,17 +178,9 @@ int main(){
 		while(token!=NULL){
 			printf("%s\n",token);
 			token = strtok(NULL, delim);
-
-
-
-
 		}
 		free(input);
-
-
 	}
-
-
-*/
+	*/
 	return 0;
 }

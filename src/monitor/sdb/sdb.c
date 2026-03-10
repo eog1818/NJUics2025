@@ -18,6 +18,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "sdb.h"
+#include <utils.h>
 
 static int is_batch_mode = false;
 
@@ -51,14 +52,16 @@ static int cmd_c(char *args) {
 
 
 static int cmd_q(char *args) {
+  nemu_state.state = NEMU_QUIT;
   return -1;
-  //return 0;
+  
 }
 
 static int cmd_help(char *args);
 
 static int cmd_Si(char *args);
-
+ static int cmd_info_r(char *args);
+ static int cmd_info_w(char *args);
 
 static struct {
   const char *name;
@@ -68,7 +71,9 @@ static struct {
   { "help", "Display information about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
-  { "si [N]", "Execute N step and stop, default N = 1 ", cmd_Si }
+  { "si", "Si [N], Execute N step and stop, default N = 1 ", cmd_Si },
+  { "ir", "info r, print the status of registers", cmd_info_r},
+  { "iw", "info w, print the staus of watches", cmd_info_w }
   /* TODO: Add more commands */
 
 };
@@ -76,9 +81,33 @@ static struct {
 #define NR_CMD ARRLEN(cmd_table)
 
 static int cmd_Si(char *args){
+    printf("step in cmd Si\n");
     //const char delim[]=" ";
     //char *input = readline();
+    printf("args is %s\n", args);
+    int n,num;
+    if (args == NULL){
+      n = 1;
+      //cpu_exec(n);
+      num = 0;
+    }
+    else {      
+      //n = atoi(args);
+      //cpu_exec(n);
+      num = sscanf(args, "%d", &n);
+    }
+    cpu_exec(n);
+    printf("num is %d\n", num);
+  return 0;
+}
 
+static int cmd_info_r(char *args){
+  isa_reg_display();
+  return 0;
+}
+
+static int cmd_info_w(char *args){
+  isa_watchpoint_display();
   return 0;
 }
 
@@ -120,7 +149,10 @@ void sdb_mainloop() {
     return;
   }
    printf("step is going to rl_gets\n");
+   int ic =0;
   for (char *str; (str = rl_gets()) != NULL; ) {
+    
+    printf("still in the mainloop, number is %d\n", ic);
     char *str_end = str + strlen(str);
 
     /* extract the first token as the command */
@@ -155,7 +187,10 @@ void sdb_mainloop() {
     }
 
     if (i == NR_CMD) { printf("Unknown command '%s'\n", cmd); }
+  
+    ic++;
   }
+  
 }
 
 void init_sdb() {

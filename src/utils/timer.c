@@ -47,5 +47,6 @@ uint64_t get_time() {
 
 void init_rand() {
   printf("step init rand\n");
-  srand(get_time_internal());
+  //srand(get_time_internal());
+  //srand(1);
 }

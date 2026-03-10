@@ -27,6 +27,7 @@ static const uint32_t img [] = {
 };
 
 static void restart() {
+  printf("step in riscv64 restart riscv64\n");
   /* Set the initial program counter. */
   cpu.pc = RESET_VECTOR;
 

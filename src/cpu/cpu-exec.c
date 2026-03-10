@@ -17,13 +17,15 @@
 #include <cpu/decode.h>
 #include <cpu/difftest.h>
 #include <locale.h>
+#include <stdint.h>
+#include <inttypes.h>
 
 /* The assembly code of instructions executed is only output to the screen
  * when the number of instructions executed is less than this value.
  * This is useful when you use the `si' command.
  * You can modify this value as you want.
  */
-#define MAX_INST_TO_PRINT 10
+#define MAX_INST_TO_PRINT 20
 
 CPU_state cpu = {};
 uint64_t g_nr_guest_inst = 0;
@@ -33,12 +35,21 @@ static bool g_print_step = false;
 void device_update();
 
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
-  printf("step trace and difftest\n");
+  printf("step in trace and difftest\n");
+  printf("CONFIG_ITRACE_COND is %s\n",CONFIG_ITRACE_COND);
 #ifdef CONFIG_ITRACE_COND
-  if (ITRACE_COND) { log_write("%s\n", _this->logbuf); }
+  if (ITRACE_COND) { 
+    log_write("%s\n", _this->logbuf); 
+    printf("logbuf is %s\n",_this->logbuf);
+  }
 #endif
-  if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
-  IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
+  printf("g_print_step is %d\n", g_print_step);
+  printf("CONFIG_ITRACE is %d\n",CONFIG_ITRACE);
+  //printf("CONFIG_DIFFTEST is %s\n",CONFIG_DIFFTEST);
+  if (g_print_step) { 
+    printf("step g print step, %d\n", g_print_step);
+    IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
+    IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
 }
 
 static void exec_once(Decode *s, vaddr_t pc) {
@@ -70,6 +81,7 @@ static void exec_once(Decode *s, vaddr_t pc) {
   p += space_len;
   printf("step going to disassemble\n");
   void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
+  printf("step going to disassemble2\n");
   disassemble(p, s->logbuf + sizeof(s->logbuf) - p,
       MUXDEF(CONFIG_ISA_x86, s->snpc, s->pc), (uint8_t *)&s->isa.inst, ilen);
 #endif
@@ -79,9 +91,11 @@ static void execute(uint64_t n) {
   printf("step execute\n");
   Decode s;
   for (;n > 0; n --) {
-    printf("n is %ld\n", n);
+    //printf("n is %ld\n", n);
+    printf("n is %" PRIu64 "\n", n);
     exec_once(&s, cpu.pc);
     g_nr_guest_inst ++;
+    printf("step going to trace and difftest\n");
     trace_and_difftest(&s, cpu.pc);
     if (nemu_state.state != NEMU_RUNNING) break;
     IFDEF(CONFIG_DEVICE, device_update());
@@ -99,13 +113,14 @@ static void statistic() {
 }
 
 void assert_fail_msg() {
+  printf("step in assert fail msg\n");
   isa_reg_display();
   statistic();
 }
 
 /* Simulate how the CPU works. */
 void cpu_exec(uint64_t n) {
-  printf("step cpu exec\n");
+  printf("step in cpu exec\n");
   g_print_step = (n < MAX_INST_TO_PRINT);
   switch (nemu_state.state) {
     case NEMU_END: case NEMU_ABORT: case NEMU_QUIT:
@@ -113,24 +128,32 @@ void cpu_exec(uint64_t n) {
       return;
     default: nemu_state.state = NEMU_RUNNING;
   }
-
+  printf("step going to get time\n");
   uint64_t timer_start = get_time();
-
+  printf("step going to execute\n");
   execute(n);
 
+  printf("step going to get time2 \n");
   uint64_t timer_end = get_time();
   g_timer += timer_end - timer_start;
 
   switch (nemu_state.state) {
-    case NEMU_RUNNING: nemu_state.state = NEMU_STOP; break;
+
+    case NEMU_RUNNING: 
+      printf("step NEMU_RUNNING to NEMU_STOP\n");
+      nemu_state.state = NEMU_STOP; break;
 
     case NEMU_END: case NEMU_ABORT:
+      printf("step NEMU_END or NEMU_ABORT\n");
       Log("nemu: %s at pc = " FMT_WORD,
           (nemu_state.state == NEMU_ABORT ? ANSI_FMT("ABORT", ANSI_FG_RED) :
            (nemu_state.halt_ret == 0 ? ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN) :
             ANSI_FMT("HIT BAD TRAP", ANSI_FG_RED))),
           nemu_state.halt_pc);
       // fall through
-    case NEMU_QUIT: statistic();
+    case NEMU_QUIT: 
+      printf("step NEMU_QUIT\n");
+      printf("step going to statistic\n");
+      statistic();
   }
 }
