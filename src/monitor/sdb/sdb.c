@@ -12,6 +12,8 @@
 *
 * See the Mulan PSL v2 for more details.
 ***************************************************************************************/
+#ifndef YOUR_HEADER_H
+#define YOUR_HEADER_H
 
 #include <isa.h>
 #include <cpu/cpu.h>
@@ -19,6 +21,12 @@
 #include <readline/history.h>
 #include "sdb.h"
 #include <utils.h>
+#include <memory/paddr.h>
+#include <memory/vaddr.h>
+#include <common.h>
+#include <inttypes.h>
+
+#endif
 
 static int is_batch_mode = false;
 
@@ -60,8 +68,10 @@ static int cmd_q(char *args) {
 static int cmd_help(char *args);
 
 static int cmd_Si(char *args);
- static int cmd_info_r(char *args);
- static int cmd_info_w(char *args);
+static int cmd_info_r(char *args);
+static int cmd_info_w(char *args);
+static int cmd_print_mem(char *args);
+ 
 
 static struct {
   const char *name;
@@ -73,7 +83,8 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
   { "si", "Si [N], Execute N step and stop, default N = 1 ", cmd_Si },
   { "ir", "info r, print the status of registers", cmd_info_r},
-  { "iw", "info w, print the staus of watches", cmd_info_w }
+  { "iw", "info w, print the staus of watches", cmd_info_w },
+  { "x", "x N EXPR, scan and print the memory, ", cmd_print_mem }
   /* TODO: Add more commands */
 
 };
@@ -85,11 +96,12 @@ static int cmd_Si(char *args){
     //const char delim[]=" ";
     //char *input = readline();
     printf("args is %s\n", args);
-    int n,num;
+    int n;
+    int num=0;
     if (args == NULL){
       n = 1;
       //cpu_exec(n);
-      num = 0;
+      //num = 0;
     }
     else {      
       //n = atoi(args);
@@ -109,6 +121,53 @@ static int cmd_info_r(char *args){
 static int cmd_info_w(char *args){
   isa_watchpoint_display();
   return 0;
+}
+
+static int cmd_print_mem(char *args){
+  printf("step in cmd print mem\n");
+  printf("args is %s\n", args);
+  word_t start_addr = 0x80000000;//word_t is unit32_t in the 32bit ISA
+  //word_t start_addr = 0x100000;//word_t is unit32_t in the 32bit ISA
+  //char *str_num_addr = strtok(args, " ");
+  int len = 30;// it is the number of every 4 bytes (32 bits)
+  //sscanf();  
+  //word_t paddr_read(paddr_t addr, int len) {
+  //word_t vaddr_read(vaddr_t addr, int len) {
+  //word_t vaddr_read(vaddr_t addr, int len);
+
+  //printf("|%-*s|",10, "pc");    
+  //printf("|0x%-10x|", cpu.pc);
+  //printf("|%-16u|\n", cpu.pc);
+  for (int i=0;i<(len/4)+1;i++){
+    printf("|0x%-10x|", start_addr+i*16);
+    //for (int j=0;j<3;j++){
+      //word_t re_addr = vaddr_read(start_addr+i*4+j, 4);//16 bytes, such as 0x555555558389, 0x555555558399, 
+    //printf("|0x%-10x|\n", vaddr_read(start_addr, len));
+    //if (start_addr+i*16+0*4 <= len){
+      word_t re_addr1 = vaddr_read(start_addr+i*16+0*4, 4);
+      word_t re_addr2 = vaddr_read(start_addr+i*16+1*4, 4);
+      word_t re_addr3 = vaddr_read(start_addr+i*16+2*4, 4);
+      word_t re_addr4 = vaddr_read(start_addr+i*16+3*4, 4);
+      //char buffer1[12], buffer2[12], buffer3[12], buffer4[12];
+      //snprintf(buffer1, sizeof(buffer1), "%" PRIu32, re_addr1);
+      //snprintf(buffer2, sizeof(buffer2), "%" PRIu32, re_addr2);
+      //snprintf(buffer3, sizeof(buffer3), "%" PRIu32, re_addr3);
+      //snprintf(buffer4, sizeof(buffer4), "%" PRIu32, re_addr4);
+
+      printf("|0x%-10x|", re_addr1);
+      //printf("|%-16d|",   re_addr1);
+      printf("|0x%-10x|", re_addr2);
+      //printf("|%-12s|", buffer2);
+      //printf("|%-16d|",   vaddr_read(start_addr+i*4+1, 4));
+      printf("|0x%-10x|", re_addr3);
+      //printf("|%-12s|", buffer3);
+      //printf("|%-16d|",   vaddr_read(start_addr+i*4+2, 4));
+      printf("|0x%-10x|\n", re_addr4);
+      //printf("|%-12s|\n", buffer4);
+      //printf("|%-16d|\n", vaddr_read(start_addr+i*4+3, 4));
+    //snprintf(buffer, sizeof(buffer), "%" PRIu32, value);
+  }
+  return 0; 
 }
 
 static int cmd_help(char *args) {
