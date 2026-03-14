@@ -25,6 +25,7 @@
 #include <memory/vaddr.h>
 #include <common.h>
 #include <inttypes.h>
+#include <stdbool.h>
 
 #endif
 
@@ -71,7 +72,7 @@ static int cmd_Si(char *args);
 static int cmd_info_r(char *args);
 static int cmd_info_w(char *args);
 static int cmd_print_mem(char *args);
- 
+static int cmd_calc_expr(char *args);
 
 static struct {
   const char *name;
@@ -84,12 +85,33 @@ static struct {
   { "si", "Si [N], Execute N step and stop, default N = 1 ", cmd_Si },
   { "ir", "info r, print the status of registers", cmd_info_r},
   { "iw", "info w, print the staus of watches", cmd_info_w },
-  { "x", "x N EXPR, scan and print the memory, ", cmd_print_mem }
+  { "x", "x N EXPR, scan and print the memory, ", cmd_print_mem },
+  { "p", "p EXPR, calc the EXPR value, ", cmd_calc_expr },
   /* TODO: Add more commands */
 
 };
 
 #define NR_CMD ARRLEN(cmd_table)
+
+
+static int cmd_calc_expr(char *args){
+  
+  if (args == NULL){
+    return 0;
+  }
+  //char *e = "(4 +3)*(2- 1)";
+  word_t result;
+	init_regex();
+	//make_token(e);
+  //printf("%s\n", e);
+  bool *success =NULL;
+  result = expr(args, success);
+  printf("results is %" PRIu32 "\n",result);
+  printf("results is 0x%" PRIx32 "\n",result);
+
+  return 0;
+}
+
 
 static int cmd_Si(char *args){
     printf("step in cmd Si\n");
