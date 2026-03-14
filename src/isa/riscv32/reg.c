@@ -12,6 +12,7 @@
 *
 * See the Mulan PSL v2 for more details.
 ***************************************************************************************/
+
 #include <isa.h>
 #include "local-include/reg.h"
 #include <cpu/cpu.h>
@@ -49,3 +50,14 @@ void isa_reg_display() {
 word_t isa_reg_str2val(const char *s, bool *success) {
   return 0;
 }
+
+//CPU_state
+//typedef struct {
+//  word_t gpr[MUXDEF(CONFIG_RVE, 16, 32)];
+//  vaddr_t pc;
+//} MUXDEF(CONFIG_RV64, riscv64_CPU_state, riscv32_CPU_state);
+
+// reg
+//extern CPU_state cpu;
+//void isa_reg_display();
+//word_t isa_reg_str2val(const char *name, bool *success);

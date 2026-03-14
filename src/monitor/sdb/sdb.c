@@ -123,6 +123,26 @@ static int cmd_info_w(char *args){
   return 0;
 }
 
+
+static int cmd_print_mem(char *args){
+  printf("step in cmd print mem\n");
+  printf("args is %s\n", args);
+  word_t start_addr = 0x80000000;//word_t is unit32_t in the 32bit ISA
+  int len = 30;// it is the number of every 4 bytes (32 bits)
+  for (int i=0;i<(len/4);i++){
+    printf("|0x%-10x|", start_addr+i*16);
+      word_t re_addr1 = vaddr_read(start_addr+i*16+0*4, 4);
+      word_t re_addr2 = vaddr_read(start_addr+i*16+1*4, 4);
+      word_t re_addr3 = vaddr_read(start_addr+i*16+2*4, 4);
+      word_t re_addr4 = vaddr_read(start_addr+i*16+3*4, 4);
+      printf("|0x%-10x|", re_addr1);
+      printf("|0x%-10x|", re_addr2);
+      printf("|0x%-10x|", re_addr3);
+      printf("|0x%-10x|\n", re_addr4);
+  }
+  return 0; 
+}
+/*
 static int cmd_print_mem(char *args){
   printf("step in cmd print mem\n");
   printf("args is %s\n", args);
@@ -138,7 +158,7 @@ static int cmd_print_mem(char *args){
   //printf("|%-*s|",10, "pc");    
   //printf("|0x%-10x|", cpu.pc);
   //printf("|%-16u|\n", cpu.pc);
-  for (int i=0;i<(len/4)+1;i++){
+  for (int i=0;i<(len/4);i++){
     printf("|0x%-10x|", start_addr+i*16);
     //for (int j=0;j<3;j++){
       //word_t re_addr = vaddr_read(start_addr+i*4+j, 4);//16 bytes, such as 0x555555558389, 0x555555558399, 
@@ -169,7 +189,7 @@ static int cmd_print_mem(char *args){
   }
   return 0; 
 }
-
+*/
 static int cmd_help(char *args) {
   printf("step cmd help\n");
   /* extract the first argument */

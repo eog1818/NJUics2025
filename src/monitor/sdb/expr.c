@@ -21,7 +21,7 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ,
+  TK_NOTYPE = 256, TK_EQ,TK_PLUS, TK_MINUS, TK_MULTIPLY, TK_DIVID, TK_DECNUM, TK_LeftPrent, TK_RightPrent 
 
   /* TODO: Add more token types */
 
@@ -37,8 +37,14 @@ static struct rule {
    */
 
   {" +", TK_NOTYPE},    // spaces
-  {"\\+", '+'},         // plus
+  {"\\+", TK_PLUS},         // plus
   {"==", TK_EQ},        // equal
+  {"\\-", TK_MINUS}, // minus
+  {"\\*", TK_MULTIPLY}, // multiple
+  {"\\/", TK_DIVID}, // divid
+  {"[[:digit:]]+", TK_DECNUM}, // decimal number "\\d+" is not working
+  {"\\(", TK_LeftPrent}, // left p
+  {"\\)", TK_RightPrent}, // right p
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -64,7 +70,6 @@ void init_regex() {
 }
 
 typedef struct token {
-
   int type;
   char str[32];
 } Token;
@@ -73,6 +78,7 @@ static Token tokens[32] __attribute__((used)) = {};
 static int nr_token __attribute__((used))  = 0;
 
 static bool make_token(char *e) {
+  e= " + 5+4*30/200-1";
   printf("step is make token\n");
   int position = 0;
   int i;

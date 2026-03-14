@@ -12,8 +12,12 @@
 *
 * See the Mulan PSL v2 for more details.
 ***************************************************************************************/
+#ifndef __test1__
+#define __test1__
 
 #include <common.h>
+
+#endif
 
 void init_monitor(int, char *[]);
 void am_init_monitor();
