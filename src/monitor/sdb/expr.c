@@ -109,6 +109,8 @@ static bool make_token(char *e) {
 
         Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
             i, rules[i].regex, position, substr_len, substr_len, substr_start);
+        //Log("match rules [%d] = \"%s\" at position %d with len %d: %.*s", i, rules[i].regex, position,
+        //  substr_len, substr_start);
 
         position += substr_len;
 
@@ -122,10 +124,19 @@ static bool make_token(char *e) {
             break;
           case TK_EQ:
             break;
+          case TK_DECNUM:
+            Assert(nr_token<65535, "The tokesn array has insufficient storge spece.");
+            Assert(substr_len<32, "token is too long");
+            strncpy(tokens[nr_token].str, substr_start, substr_len);
+            tokens[nr_token].type=rules[i].token_type;
+            tokens[nr_token].str[substr_len]='\0';
+            nr_token++;
+            break;
           
             
           default: 
            //if (rules[i].token_type != TK_NOTYPE){
+            Assert(nr_token<65535, "The tokens array has insufficient storage space. ");
             tokens[nr_token].type = rules[i].token_type;
             strncpy(tokens[nr_token].str, substr_start + 0, substr_len);
             nr_token=nr_token+1;
@@ -172,6 +183,7 @@ int eval(int p,  int q){
       case TK_DIVID : return val1/val2;
       default: 
       assert(0);
+      //Assert(0, 0);
       
     }
     

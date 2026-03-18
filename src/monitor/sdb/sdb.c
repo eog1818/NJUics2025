@@ -96,16 +96,23 @@ static struct {
 
 static int cmd_calc_expr(char *args){
   
-  if (args == NULL){
-    return 0;
-  }
-  //char *e = "(4 +3)*(2- 1)";
+  //if (args == NULL){
+  //  return 0;
+  //}
+  
   word_t result;
 	init_regex();
-	//make_token(e);
-  //printf("%s\n", e);
-  bool *success =NULL;
+	bool *success =NULL;
+  //result = expr(args, success);
+  
+  //char *e = "(4 +3)*(2- 1)";
+  //char *e = "( ( ( 92u ) / 70415u / ( ( ( ( 3967978u * 23387u ) ) / 7u / 0u ) ) ) )";
+  //char *e = "(9490)*(7)";   
+  //char *e = "((13)+(82)+(55)+(11/14*35)/20/81-17/26/(39-(12)-14))";
+  //result = expr(e, success);
+
   result = expr(args, success);
+  
   printf("results is %" PRIu32 "\n",result);
   printf("results is 0x%" PRIx32 "\n",result);
 
