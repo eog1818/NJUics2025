@@ -27,6 +27,8 @@
 #include <inttypes.h>
 #include <stdbool.h>
 
+#define MAX_LINE_LENGTH 10000
+
 #endif
 
 static int is_batch_mode = false;
@@ -73,6 +75,7 @@ static int cmd_info_r(char *args);
 static int cmd_info_w(char *args);
 static int cmd_print_mem(char *args);
 static int cmd_calc_expr(char *args);
+static int cmd_calc_expr_test(char *args);
 
 static struct {
   const char *name;
@@ -87,13 +90,39 @@ static struct {
   { "iw", "info w, print the staus of watches", cmd_info_w },
   { "x", "x N EXPR, scan and print the memory, ", cmd_print_mem },
   { "p", "p EXPR, calc the EXPR value, ", cmd_calc_expr },
+  { "test", "test the p EXPR, calc the EXPR value, ", cmd_calc_expr_test },
   /* TODO: Add more commands */
 
 };
 
 #define NR_CMD ARRLEN(cmd_table)
 
+static int cmd_calc_expr_test(char *args){
+  char line[MAX_LINE_LENGTH];
+  char first[MAX_LINE_LENGTH], second[MAX_LINE_LENGTH];
+  
+  word_t result;
+	init_regex();
+	bool *success =NULL;
+  //sscanf("(25)","%s", second);
+  //result = expr(second, success);
+  FILE *fp = fopen("/home/sean/ics2025/nemu/tools/gen-expr/input_tmp", "r");
+  assert(fp != NULL);
+  while (fgets(line, sizeof(line), fp) != NULL) {
+        if (sscanf(line,"%s %s", first, second) == 2){
+           printf("%s\n", second); 
+           result = expr(second, success);
+          printf("%s\n", first); 
+          printf("results is %" PRIu32 "\n",result);
+          printf("results is 0x%" PRIx32 "\n",result);
+        }
+        
+  }
+  fclose(fp); 
 
+  return 0;
+
+}
 static int cmd_calc_expr(char *args){
   
   //if (args == NULL){
@@ -110,6 +139,15 @@ static int cmd_calc_expr(char *args){
   //char *e = "(9490)*(7)";   
   //char *e = "((13)+(82)+(55)+(11/14*35)/20/81-17/26/(39-(12)-14))";
   //result = expr(e, success);
+
+  //FILE *fp = fopen("/home/sean/ics2025/nemu/tools/gen-expr/input", "r");
+  //Assert(fp, "");
+  //FILE *fp = fopen("/tmp/.code.c", "w");
+  //assert(fp != NULL);
+  
+  //fputs(code_buf, fp);
+  //fclose(fp);
+
 
   result = expr(args, success);
   
