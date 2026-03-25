@@ -348,6 +348,7 @@ word_t eval(int p,  int q, _Bool eEvalSuccess){
   int op; 
   word_t val1, val2;
   word_t num;
+  int num1;
   //int result;
   if (p>q){
     printf("bad expression");
@@ -361,8 +362,17 @@ word_t eval(int p,  int q, _Bool eEvalSuccess){
   else if (check_parentheses(p, q) == true){
 
     return eval(p+1, q-1, eEvalSuccess);
-  }
-  else {
+  }else if((q-p)==1){
+    if (tokens[p].type==TK_Negative){
+      printf("negatibe token and single number token");
+      sscanf(tokens[q].str, "%d", &num1);
+      //printf("The value is: %" PRIu32 "\n", value);
+      //result = sscanf(tokens[q].str, %" PRIu32 ", &num);
+      num = (uint32_t) ((-1) * num1);
+      //*eEvalSuccess = true;
+      return num;   
+    }
+  } else {
     op = position_primary_op( p, q);
     val1=eval(p,op-1, eEvalSuccess);
     val2=eval( op+1,q, eEvalSuccess);
