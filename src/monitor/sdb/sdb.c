@@ -23,7 +23,8 @@
 #include <utils.h>
 #include <memory/paddr.h>
 #include <memory/vaddr.h>
-#include <common.h>
+//#include <common.h>
+#include <debug.h>
 #include <inttypes.h>
 #include <stdbool.h>
 

@@ -169,12 +169,12 @@ void init_regex() {
 
 typedef struct token {
   int type;
-  char str[32];
+  char str[100];
 } Token;
 
 //static Token tokens[32] __attribute__((used)) = {};
 //static int nr_token __attribute__((used))  = 0;
-static Token tokens[32] = {};
+static Token tokens[5000] = {};
 static int nr_token  = 0;
 //for (int i = 0; i < 32; i++) {
 //    strcpy(tokens[i].str, "\0");
@@ -197,13 +197,12 @@ static bool make_token(char *e) {
       if (regexec(&re[i], e + position, 1, &pmatch, 0) == 0 && pmatch.rm_so == 0) {
         char *substr_start = e + position;
         int substr_len = pmatch.rm_eo;
-
-        //Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
-        //    i, rules[i].regex, position, substr_len, substr_len, substr_start);
-        //Log("match rules [%d] = \"%s\" at position %d with len %d: %.*s", i, rules[i].regex, position,
-        //  substr_len, substr_start);
-
         position += substr_len;
+        
+        Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
+            i, rules[i].regex, position, substr_len, substr_len, substr_start);
+        Log("match rules [%d] = \"%s\" at position %d with len %d: %.*s", 
+            i, rules[i].regex, position, substr_len, substr_len, substr_start);
 
         // TODO: Now a new token is recognized with rules[i]. Add codes
         // to record the token in the array `tokens'. For certain types
